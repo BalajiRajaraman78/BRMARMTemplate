@@ -40,8 +40,20 @@ jobs:
             location="UK West"
             storageAccountName=brmglobostg002
           deploymentMode: incremental    
-          
-      - run: echo ${{ steps.storageAccountDeploy.outputs.BlobUri  }}
+
+      - name: Deploy Virtual Machine
+        uses: Azure/arm-deploy@v2          
+        with:
+          scope: resourcegroup
+          resourceGroupName: rsg-githubactions
+          subscriptionId: a56b08c0-a01b-48ad-a668-d832c57951c8
+          template: ./arm-templates/virtualmachine.json
+          parameters: 
+            adminPassword="My$ecureP@ssword!"
+          deploymentMode: incremental              
+
+
+      # - run: echo ${{ steps.storageAccountDeploy.outputs.BlobUri  }}
       # - name: Deploy Resource Group rsg-githubactions with AZ CLI
       #   uses: azure/cli@v2
       #   with:
