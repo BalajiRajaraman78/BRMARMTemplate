@@ -14,12 +14,21 @@ jobs:
         uses: Azure/login@v2
         with:
           creds : ${{ secrets.AZURE_CREDENTIALS }}
-
-      - name: Azure/Login
-        uses: azure/cli@v2
+      
+      - name: Deploy Resource Group rsg-githubactions with ARM Templates
+        uses: Azure/arm-deploy@v2
         with:
-          azcliversion: 2.30.0
-          inlineScript: |
-            az deployment sub create --location "UK West" --template-file ./arm-templates/resourcegroup.json  
+          scope: subscription
+          subscriptionId: a56b08c0-a01b-48ad-a668-d832c57951c8
+          region: UK West
+          template: ./arm-templates/resourcegroup.json
+          deploymentName:  ./arm-templates/resourcegroup.json 
+
+      # - name: Deploy Resource Group rsg-githubactions with AZ CLI
+      #   uses: azure/cli@v2
+      #   with:
+      #     azcliversion: 2.30.0
+      #     inlineScript: |
+      #       az deployment sub create --location "UK West" --template-file ./arm-templates/resourcegroup.json  
 
     
