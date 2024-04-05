@@ -22,7 +22,7 @@ jobs:
           subscriptionId: a56b08c0-a01b-48ad-a668-d832c57951c8
           region: UK West
           template: ./arm-templates/resourcegroup.json
-          deploymentName:  ./arm-templates/resourcegroup.json 
+          deploymentName:  rsg-githubactions
 
       # - name: Deploy Resource Group rsg-githubactions with AZ CLI
       #   uses: azure/cli@v2
