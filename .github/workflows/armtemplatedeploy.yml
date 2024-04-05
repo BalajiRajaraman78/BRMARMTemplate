@@ -5,12 +5,16 @@ on:
           - main
     workflow_dispatch:
 env:
-  resource_group_name: rsg-githubactions
-  location: UK West
   subscriptionId: a56b08c0-a01b-48ad-a668-d832c57951c8
 jobs:
-  armDeploy:
+  armDeployStaging:
+    name: Deploy to Staging
     runs-on: ubuntu-latest
+    env:
+      resource_group_name: rsg-stg-githubactions
+      location: UK West
+    environment: 
+      name: staging
     steps:
       - uses: actions/checkout@v3
 
