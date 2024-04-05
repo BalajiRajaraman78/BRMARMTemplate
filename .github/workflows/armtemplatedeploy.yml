@@ -4,6 +4,10 @@ on:
       branches:
           - main
     workflow_dispatch:
+env:
+  resource_group_name: rsg-githubactions
+  location: UK West
+  subscriptionId: a56b08c0-a01b-48ad-a668-d832c57951c8
 jobs:
   armDeploy:
     runs-on: ubuntu-latest
@@ -15,29 +19,29 @@ jobs:
         with:
           creds : ${{ secrets.AZURE_CREDENTIALS }}
       
-      - name: Deploy Resource Group rsg-githubactions with ARM Templates
+      - name: Deploy Resource Group ${{ env.resource_group_name }} with ARM Templates
         uses: Azure/arm-deploy@v2
         with:
           scope: subscription
-          subscriptionId: a56b08c0-a01b-48ad-a668-d832c57951c8
-          region: UK West
+          subscriptionId: ${{ env.subscriptionId }}
+          region: "${{ env.location }}"
           template: ./arm-templates/resourcegroup.json
           parameters: 
-            location="UK West"
-            resourceGroupName=rsg-githubactions
-          deploymentName:  rsg-githubactions
+            location="${{ env.location }}"
+            resourceGroupName=${{ env.resource_group_name }} 
+          deploymentName:  ${{ env.resource_group_name }} 
 
       - name: Deploy Storage Account
         uses: Azure/arm-deploy@v2
         id: storageAccountDeploy
         with:
           scope: resourcegroup
-          resourceGroupName: rsg-githubactions
-          subscriptionId: a56b08c0-a01b-48ad-a668-d832c57951c8
+          resourceGroupName: ${{ env.resource_group_name }} 
+          subscriptionId: ${{ env.subscriptionid }}
           template: ./arm-templates/storageaccount.json
           parameters: 
             sku=Standard_LRS
-            location="UK West"
+            location="${{ env.location }}"
             storageAccountName=brmglobostg002
           deploymentMode: incremental    
 
@@ -45,20 +49,20 @@ jobs:
         uses: Azure/arm-deploy@v2          
         with:
           scope: resourcegroup
-          resourceGroupName: rsg-githubactions
-          subscriptionId: a56b08c0-a01b-48ad-a668-d832c57951c8
+          resourceGroupName: ${{ env.resource_group_name }} 
+          subscriptionId: ${{ env.subscriptionid }}
           template: ./arm-templates/virtualmachine.json
           parameters: 
             adminPassword=${{ secrets.UBUNTU_ADMIN_PASSWORD }} 
+            location="${{ env.location }}"
           deploymentMode: incremental              
 
-      # password updated
       # - run: echo ${{ steps.storageAccountDeploy.outputs.BlobUri  }}
-      # - name: Deploy Resource Group rsg-githubactions with AZ CLI
+      # - name: Deploy Resource Group ${{ env.resource_group_name }}  with AZ CLI
       #   uses: azure/cli@v2
       #   with:
       #     azcliversion: 2.30.0
       #     inlineScript: |
-      #       az deployment sub create --location "UK West" --template-file ./arm-templates/resourcegroup.json  
+      #       az deployment sub create --location "${{ env.location }}" --template-file ./arm-templates/resourcegroup.json  
 
     
