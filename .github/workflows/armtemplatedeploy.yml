@@ -52,7 +52,7 @@ jobs:
             adminPassword= ${{ secrets.UBUNTU_ADMIN_PASSWORD }} 
           deploymentMode: incremental              
 
-
+      # password updated
       # - run: echo ${{ steps.storageAccountDeploy.outputs.BlobUri  }}
       # - name: Deploy Resource Group rsg-githubactions with AZ CLI
       #   uses: azure/cli@v2
